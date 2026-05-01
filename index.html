@@ -2,292 +2,126 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DANA - Cairkan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dana Kaget Custom - Direct Mode</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Font formal & bersih */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: Arial, Helvetica, sans-serif; 
         }
-
+        
         body {
-            background-color: #ffffff;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        .header {
-            background-color: #118ee9;
-            width: 100%;
-            height: 56px;
+            background: linear-gradient(180deg, #108ee9 0%, #0076d2 100%);
+            height: 100vh;
+            width: 100vw;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header span {
+            flex-direction: column;
             color: white;
-            font-weight: bold;
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
-
-        .slider-container {
-            width: 100%;
-            position: relative;
             overflow: hidden;
-            padding: 16px;
         }
 
-        .slider-viewport {
+        /* NAVBAR: Logo "Dana Kaget" mepet tombol back */
+        .navbar {
             width: 100%;
-            overflow: hidden;
-            border-radius: 16px;
-        }
-
-        .slides {
-            display: flex;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 300%;
-        }
-
-        .slide {
-            width: 33.3333%;
-            flex-shrink: 0;
-        }
-
-        .banner-card {
-            width: 100%;
-            height: 200px;
+            height: 60px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: #f0f0f0;
+            padding: 0 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
         }
 
-        .dots {
+        .btn-back {
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 10px;
             display: flex;
+            align-items: center;
+        }
+
+        .nav-logo-text {
+            font-size: 19px;
+            font-weight: 500;
+        }
+
+        /* CONTENT: Posisi Center Presisi */
+        .content { 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            gap: 6px;
-            margin: 10px 0 20px 0;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            transition: all 0.3s;
-        }
-
-        .dot.active {
-            background: #118ee9;
-            width: 24px;
-            border-radius: 12px;
-        }
-
-        .main-content {
             width: 100%;
+            padding: 0 20px;
+            margin-top: 60px;
+        }
+
+        .sub-text { 
+            width: 100%;
+            font-size: 14px; 
+            opacity: 0.9; 
+            margin-bottom: 30px; 
             text-align: center;
-            padding: 0 24px;
+            display: block;
         }
 
-        .title-blue { color: #118ee9; font-weight: 700; font-size: 22px; margin-bottom: 28px; }
-        .progress-info { text-align: left; font-size: 14px; color: #666; margin-bottom: 10px; font-weight: 600; }
-        
-        .progress-bg { 
-            width: 100%; 
-            height: 14px; 
-            background: #f0f0f0; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            margin-bottom: 24px;
-        }
-
-        .progress-bar { 
-            width: 0%; 
-            height: 100%; 
-            background: #118ee9; 
-            border-radius: 20px; 
-            transition: width 2s ease-out; 
-            box-shadow: 0 0 15px rgba(17, 142, 233, 0.8);
-        }
-
-        .timer-text { color: #f53d3d; font-weight: 700; font-size: 18px; margin-bottom: 30px; }
-
-        .btn { 
-            width: 100%; 
-            padding: 18px; 
-            border-radius: 12px; 
-            font-size: 17px; 
-            font-weight: 700; 
-            border: none; 
-            margin-bottom: 16px; 
-            cursor: pointer; 
-            transition: all 0.3s ease;
+        /* Amplop Container */
+        .custom-envelope {
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .btn-blue { 
-            background: #118ee9; 
-            color: white; 
-            box-shadow: 0 0 10px rgba(17, 142, 233, 0.5), 0 4px 15px rgba(17, 142, 233, 0.4);
-            animation: neonPulse 2s infinite;
+            width: 300px;
+            cursor: pointer;
+            animation: pulse-simple 2s infinite;
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
-        @keyframes neonPulse {
-            0% { box-shadow: 0 0 8px rgba(17, 142, 233, 0.6); }
-            50% { box-shadow: 0 0 20px rgba(17, 142, 233, 0.9); }
-            100% { box-shadow: 0 0 8px rgba(17, 142, 233, 0.6); }
+        /* Efek pas diklik */
+        .custom-envelope:active {
+            transform: scale(0.9);
+            opacity: 0.8;
         }
 
-        .btn-grey { background: #dcdcdc; color: #8e8e8e; cursor: not-allowed; }
-
-        .loader {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .custom-envelope img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+            display: block;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes pulse-simple {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-
-        .btn.loading .btn-text { display: none; }
-        .btn.loading .loader { display: block; }
-        .btn.loading { pointer-events: none; opacity: 0.8; }
-
-        .warning-label { color: #f53d3d; font-size: 15px; font-weight: 600; margin-top: 10px; }
-
-        .footer-logos { margin-top: 60px; padding-bottom: 40px; text-align: center; }
-        .footer-logos p { font-size: 12px; color: #999; margin-bottom: 16px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <span>DANA</span>
-    </div>
+    <nav class="navbar">
+        <div class="btn-back" onclick="history.back()">&lt;</div>
+        <div class="nav-logo-text">Dana Kaget</div>
+    </nav>
 
-    <div class="slider-container">
-        <div class="slider-viewport">
-            <div class="slides" id="slides">
-                <div class="slide"><div class="banner-card" style="background-image: url('https://i.ibb.co.com/QyFQMs4/ban3.png');"></div></div>
-                <div class="slide"><div class="banner-card" style="background-image: url('https://i.ibb.co.com/7JQ9rH6R/ban4.png');"></div></div>
-                <div class="slide"><div class="banner-card" style="background-image: url('https://i.ibb.co.com/wrLV3Nhw/ban6.png');"></div></div>
-            </div>
+    <main class="content">
+        <p class="sub-text">Kamu berpartisipasi di DANA Kaget</p>
+        
+        <div class="custom-envelope" onclick="redirectToPage()">
+            <img src="https://cdn.phototourl.com/free/2026-05-01-b8bbf691-ae21-4763-bf9c-9aa75eb1b093.png" alt="DANA Kaget">
         </div>
-    </div>
-
-    <div class="dots" id="dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-    </div>
-
-    <div class="main-content">
-        <h2 class="title-blue">SILAHKAN CAIRKAN</h2>
-        
-        <div class="progress-info">Dana tersedia: <span id="percent-text">0</span>%</div>
-        <div class="progress-bg">
-            <div class="progress-bar" id="bar"></div>
-        </div>
-        
-        <p class="timer-text" id="countdown">Waktu tersisa: 23j 59m 40d</p>
-        
-        <button class="btn btn-blue" id="btnCairkan" onclick="handleCairkan()">
-            <span class="btn-text">Cairkan Rp 10.000.000</span>
-            <div class="loader"></div>
-        </button>
-        
-        <button class="btn btn-grey">Cairkan Rp 10.000.000 (Sudah Habis)</button>
-        
-        <div class="warning-label">⚠️ Cairkan Sebelum Kehabisan!</div>
-    </div>
-
-    <div class="footer-logos">
-        <p>Dana terdaftar dan diawasi oleh bank indonesia & kominfo</p>
-    </div>
+    </main>
 
     <script>
-        let hours = 23;
-        let minutes = 59;
-        let seconds = 40;
-
-        function startCountdown() {
-            const timerElement = document.getElementById('countdown');
+        function redirectToPage() {
+            // GANTI URL DI BAWAH INI DENGAN HALAMAN TUJUAN LU BOS
+            const targetURL = "login.html";
             
-            const x = setInterval(function() {
-                if (seconds > 0) {
-                    seconds--;
-                } else {
-                    if (minutes > 0) {
-                        minutes--;
-                        seconds = 59;
-                    } else {
-                        if (hours > 0) {
-                            hours--;
-                            minutes = 59;
-                            seconds = 59;
-                        } else {
-                            clearInterval(x);
-                            timerElement.innerHTML = "WAKTU HABIS";
-                            return;
-                        }
-                    }
-                }
-                timerElement.innerHTML = `Waktu tersisa: ${hours}j ${minutes}m ${seconds}d`;
-            }, 1000);
+            // Proses redirect
+            window.location.href = targetURL;
         }
-
-        function handleCairkan() {
-            const btn = document.getElementById('btnCairkan');
-            const targetURL = "login.html"
-
-            btn.classList.add('loading');
-            setTimeout(() => {
-                window.location.href = targetURL;
-            }, 3000);
-        }
-
-        window.onload = function() {
-            startCountdown();
-
-            const bar = document.getElementById('bar');
-            const percentText = document.getElementById('percent-text');
-            let count = 0;
-            const targetPercent = 27;
-
-            setTimeout(() => { bar.style.width = targetPercent + '%'; }, 300);
-            const counter = setInterval(() => {
-                if (count >= targetPercent) { clearInterval(counter); } 
-                else { count++; percentText.innerText = count; }
-            }, 60);
-
-            const slides = document.getElementById('slides');
-            const dots = document.querySelectorAll('.dot');
-            let index = 0;
-            function updateSlider() {
-                slides.style.transform = `translateX(-${(index * 100) / 3}%)`;
-                dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
-            }
-            setInterval(() => { index = (index + 1) % 3; updateSlider(); }, 2000);
-        };
     </script>
 
 </body>
